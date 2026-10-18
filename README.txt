@@ -1,91 +1,176 @@
-ANCIENT YOUTUBE AUTO — RESUMABLE DOCUMENTARY PIPELINE
-======================================================
+# AncientYouTubeAuto
 
-PURPOSE
-Create fresh ancient-human documentary topics, two narration parts,
-Gemini AI Studio Enzo voiceovers, numbered Nano Banana / Flow images,
-and a synchronized 1080p YouTube documentary.
+**Automated AI Image Generation & YouTube Visual Production Pipeline**
 
-IMPORTANT: This is a browser-driven prototype, not a verified fully autonomous
-production system. Google AI Studio, ChatGPT and Google Flow can change their UI.
-AI Studio may open to a gallery first. The automation clicks Create new dialog, then uses Speaker 1, Style and Run.
-Storyteller > Enzo still needs testing in YOUR signed-in browser. If a control cannot be positively
-identified, the program STOPS with screenshots instead of choosing a wrong
-voice or paying for extra generation. It does not bypass logins/CAPTCHAs.
+AncientYouTubeAuto is a Python-based automation project designed to streamline the creation of AI-generated visuals for YouTube videos.
 
-SETUP (Windows PowerShell)
-  Expand-Archive "$HOME\Downloads\AncientYouTubeAuto.zip" "$HOME\Downloads" -Force
-  cd "$HOME\Downloads\AncientYouTubeAuto"
-  .\Install.ps1
+The system connects a ChatGPT prompt-generation workflow with Google Flow, allowing image prompts to be submitted in batches, images to be downloaded in 2K resolution, and completed images to be removed from the Google Flow workspace.
 
-Chrome must be running with remote debugging on port 9333 and logged in to:
-   https://chatgpt.com/
-   https://aistudio.google.com/generate-speech?model=gemini-3.8-flash-tts
-   https://flow.google.com/project/993384d2-016a-442c-89d2-1edbddbab327
-Use the Chrome startup from your existing FlowPromptAgent setup if needed.
+The main objective is to minimise repetitive manual work while maintaining an organised and reliable content-production pipeline.
 
-FIRST — ZERO-COST CONFIGURATION CHECK
-  .\Start-AutoVideo.ps1 -DryRun
+## Key Features
 
-RUN ONE COMPLETE VIDEO
-  .\Start-AutoVideo.ps1
+- Automated processing of image-generation prompts
+- Batch submission of 15 prompts
+- Reverse-order submission for efficient image retrieval
+- Automatic 2K image downloading
+- Automatic removal of successfully downloaded images
+- Continuous generation of new ChatGPT prompt batches
+- Support for existing and future projects
+- Download verification before deletion
+- Recovery and journal tracking
+- Browser automation using Python
 
-START SMALL — GENERATE SCRIPT AND STOP, THEN RESUME
-  .\Start-AutoVideo.ps1 -StopAfter scripts
-  .\Start-AutoVideo.ps1
+## How the Automation Works
 
-TEST THE IMAGE LOOP — STOP AFTER THE FIRST 5 IMAGES
-  .\Start-AutoVideo.ps1 -MaxBatches 1
-  .\Start-AutoVideo.ps1
+### Phase 1 — Generate Image Prompts
 
-CONTINUOUS NEW-VIDEO LOOP (POTENTIALLY SIGNIFICANT COSTS)
-  .\Start-AutoVideo.ps1 -Videos 0
+ChatGPT prepares 15 detailed image prompts based on a YouTube story or documentary script.
 
-Project folders (automatically named by date and title):
-  C:\YouTubeAI\Projects\YYYYMMDD-HHMMSS-topic-name\
-      project.json
-      script\part_1.txt, part_2.txt
-      audio\part_1.wav, part_2.wav (or downloaded audio formats)
-      images\visual_001.jpg ...
-      images\prompts\001-005.txt ...
-      FlowPromptAgentData\state.json
-      edit\scenes.json, scene_map.json, timings_review.csv, transcript.txt
-      diagnostics\*.png, *.txt
-      final_video.mp4
-  C:\YouTubeAI\Projects\_AncientYouTubeAuto\history.json, current.json
+Each prompt represents a specific scene and follows the project's chosen visual style.
 
-Safety:
-  - Never edits C:\YouTubeAI\images or C:\YouTubeAI\FlowPromptAgentData.
-  - Creates a new local folder and a new ChatGPT conversation per video.
-  - Records each used title and rejects exact repeats of used topics.
-  - The previous Ancient Humans Without Doctors topic is pre-excluded.
-  - One image prompt per narration sentence: all are numbered, 5 per batch.
-  - Existing Flow agent keeps its protected 2K image journal and match safeguards.
-  - Audio generation is NOT re-submitted after an uncertain attempt.
-  - If a browser download fails after generation, save the original audio manually
-    as audio\part_1.wav or .mp3 inside that CURRENT project's folder and rerun.
-  - A failed Whisper transcript match stops rendering rather than inventing cuts.
-  - Resume by running the same command again; previously completed files are kept.
-  - To explicitly retry an audio part, after verifying it did not generate:
-       .\Start-AutoVideo.ps1 -RetryVoicePart 1
-    (or part 2). This may incur another generation charge.
+### Phase 2 — Submit Prompts in Reverse Order
 
-COST / TIME
-  Many sentences means many image generations. No fixed upper quota;
-  use MaxBatches for a test. AI Studio voice usage and Flow jobs may have
-  limits or charges. One video can require dozens to >100 Flow images.
-  On an 8GB GPU / CPU Whisper small, transcription+1080p rendering can take time.
+The automation sends the 15 image prompts to Google Flow in reverse numerical order.
 
-Limitations:
-  - ChatGPT can supply wrong historical claims; no fully automated fact-check.
-  - "New" compares known titles, not every publicly existing YouTube video.
-  - UI selectors cannot be verified in the assistant's environment.
-  - AI Studio may not allow generating long parts in one request; if so, the
-    run stops to avoid silently truncated narration.
-  - PDF guidelines ask for 1800-2500 words but also describe 8-12min videos.
-    This pipeline prioritizes user's 2-part / ~10-12min request: 700-900 words each.
-    Edit pipeline.py's script_request to change target duration.
+**Submission order:**
 
-Included:
-  pipeline.py, browser_ops.py, bundled FlowPromptAgent modules,
-  sync/sync_video.py (Whisper sentence-to-visual alignment), source guide.
+15 → 14 → 13 → ... → 3 → 2 → 1
+
+This arrangement is intentional. When newly generated images appear at the top of Google Flow, the image for prompt 1 should be positioned first, allowing efficient top-to-bottom processing.
+
+### Phase 3 — Download and Remove Images
+
+The automation processes images starting from the top of the Google Flow workspace.
+
+For each image:
+
+1. Select the top image.
+2. Open the Download menu.
+3. Select **2K** resolution.
+4. Wait for the download to finish.
+5. Verify the downloaded file exists and is complete.
+6. Open the three-dot menu.
+7. Select **Move to bin**.
+8. Continue with the next top image.
+
+**Important:** An image must never be moved to the bin unless its download has been successfully verified.
+
+### Phase 4 — Prepare the Next Batch
+
+While the current batch is being processed, ChatGPT prepares the next 15 prompts.
+
+The intended pipeline overlaps prompt preparation with Google Flow processing to reduce idle time.
+
+### Phase 5 — Continuous Automation
+
+The workflow repeats:
+
+**Generate prompts → Submit in reverse → Download 2K → Verify → Move to bin → Next batch**
+
+The intended design supports both ongoing projects and new projects without unnecessary repetition of completed work.
+
+## Project Structure
+
+```text
+AncientYouTubeAuto/
+│
+├── pipeline.py
+│
+├── flow_agent/
+│   ├── batch_agent.py
+│   ├── agent.py
+│   ├── journal.py
+│   └── config.json
+│
+└── README.md
+```
+
+### Main Components
+
+| File | Responsibility |
+|---|---|
+| `pipeline.py` | Overall pipeline coordination |
+| `flow_agent/batch_agent.py` | Batch processing and image workflow |
+| `flow_agent/agent.py` | Browser automation and Google Flow interaction |
+| `flow_agent/journal.py` | Progress tracking and recovery records |
+| `flow_agent/config.json` | Automation configuration |
+
+These descriptions represent the intended responsibilities; the exact implementation should be checked against the current source files.
+
+## Operating Modes
+
+### Fast Mode — Preferred Workflow
+
+Fast Mode is designed to minimise unnecessary browser actions.
+
+It follows the defined top-to-bottom workflow without repeatedly matching every visible image against historical prompts.
+
+The priority is efficient image processing while maintaining download verification and project boundaries.
+
+### Safe Resume
+
+Safe Resume handles interrupted sessions and previously recorded work.
+
+However, previously submitted images should not automatically force the entire pipeline into a slow prompt-matching workflow.
+
+The preferred behaviour is to identify the current project's pending items and continue using the fast processing method wherever it is safe.
+
+## Safety Requirements
+
+The automation must:
+
+- Confirm that each downloaded image is complete before deleting its Google Flow copy.
+- Avoid deleting images belonging to unrelated projects.
+- Preserve existing downloaded files without accidental overwrites.
+- Track processed batches to reduce duplicate submissions.
+- Recover from browser interruptions and partial downloads.
+- Avoid unnecessary regeneration of already submitted images.
+- Record errors and progress for troubleshooting.
+
+**Do not use `-FreshStart` when continuing an existing project.**
+
+## Technologies
+
+- Python
+- Playwright browser automation
+- Google Chrome / Chrome DevTools Protocol
+- Google Flow
+- ChatGPT
+- JSON configuration and progress tracking
+
+## Local Project Directory
+
+```text
+C:\Users\heroa\Downloads\AncientYouTubeAuto
+```
+
+The application runs locally on Windows. Browser configuration, output directories, and other environment-specific settings should be verified against the installed version.
+
+## Current Development Priorities
+
+- Reliable reverse-order submission of 15 images
+- Fast top-to-bottom image processing
+- Verified 2K downloads before moving images to the bin
+- Concurrent preparation of the next ChatGPT prompt batch
+- Seamless continuation of existing projects
+- Reliable recovery after interruptions
+- Minimal unnecessary browser interaction
+
+## Project Status
+
+**Active development and testing.**
+
+This README describes the intended production workflow. Individual features, especially concurrent batching, recovery behaviour, and safe deletion, must be verified against the current implementation before unattended operation.
+
+## Purpose
+
+AncientYouTubeAuto was created to explore how AI models and browser automation can work together to reduce repetitive tasks in digital content production.
+
+The long-term objective is a reliable, highly automated pipeline capable of preparing consistent visual assets for YouTube documentaries and animated stories.
+
+---
+
+**Project:** AncientYouTubeAuto  
+**Developer:** Hafizullah Abrahimi  
+**Category:** AI Automation / Python / Browser Automation / Content Production
