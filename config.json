@@ -1,0 +1,19 @@
+{
+  "flow_url": "https://flow.google.com/u/1/project/11e0b406-ad86-4b3e-8883-5b765aa4d33c",
+  "cdp_url": "http://127.0.0.1:9333",
+  "output_dir": "C:\\YouTubeAI\\Projects\\Survival\\20261016-145132-arctic-storm-a-cargo-pilot-stranded-on-a-frozen-lake-with-a-broke\\images",
+  "working_dir": "C:\\YouTubeAI\\Projects\\Survival\\20261016-145132-arctic-storm-a-cargo-pilot-stranded-on-a-frozen-lake-with-a-broke\\FlowPromptAgentData",
+  "generation_timeout_seconds": 240,
+  "upscale_timeout_seconds": 240,
+  "download_timeout_seconds": 210,
+  "preferred_quality_labels": [
+    "2Ãƒâ€”",
+    "2x",
+    "1K"
+  ],
+  "require_upscale": true,
+  "minimum_download_width_or_height": 1000,
+  "fast_download_trash_mode": true,
+  "default_batch_size": 15,
+  "prefetch_next_batch": true
+}
