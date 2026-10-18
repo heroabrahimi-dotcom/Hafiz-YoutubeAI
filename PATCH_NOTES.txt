@@ -1,0 +1,33 @@
+AI Studio narration-editor fix (2026-10-13)
+
+This patch addresses:
+  STOPPED: Cannot uniquely identify AI Studio narration editor; no generation submitted.
+
+Earlier confirmed steps are unchanged: Speaker 1 – Enzo selection, opening the
+main editor's Style popover, and setting the cinematic documentary instructions.
+
+New browser_ops.py:
+- Detects the speech text area from the visible sample placeholder beginning
+  <gasp> That's a great idea! (not only from 'text'/'dialog' attributes).
+- Also recognises large generic textareas, Slate/Lexical/ProseMirror, and
+  contenteditable narration fields.
+- Anchors discovery to the visible 'Speaker 1 – Enzo' pill, excluding
+  the voice-library search and the separate custom Style textbox.
+- Falls back to clicking inside the main speech card if editing only activates
+  on focus.
+- Verifies the *complete* Part 1 / Part 2 script text before clicking Run.
+- If still unmatched, saves project/diagnostics/studio_partN_editor_dom.json
+  listing visible editor attributes/coordinates, and DOES NOT generate audio.
+
+INSTALL (overlays only existing files):
+  Expand-Archive "$HOME\Downloads\AncientYouTubeAuto_NarrationEditor_Fix.zip" "$HOME\Downloads" -Force
+  cd "$HOME\Downloads\AncientYouTubeAuto"
+  .\Start-AutoVideo.ps1
+
+DO NOT use -FreshStart. All existing project data remain untouched.
+
+Locally validated in real headless Chromium using 7 UI tests (including
+5 narration-editor cases and 2 Style/dropdown cases) plus 5 pipeline tests.
+Google's live account page and the actual speech rendering/downloading
+cannot be tested from this environment; next runtime failure, if any, may
+require the new diagnostics JSON.

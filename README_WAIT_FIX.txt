@@ -1,0 +1,1 @@
+Audio wait fix: After a verified Run click, wait up to 45 minutes, report progress every 30 seconds, retry transient Download event failures every 25 seconds. Never click Run more than once. On timeout, preserve the existing result for manual recovery. This is a code-level test, not a live AI Studio test.
